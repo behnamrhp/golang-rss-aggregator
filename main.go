@@ -40,6 +40,10 @@ func runWebServer(port string) {
 		MaxAge:           300,
 	}))
 
+	v1Router := chi.NewRouter()
+	fmt.Println("here hereeeee")
+	v1Router.Get("/healthz", handlerHealthCheck)
+	router.Mount("/v1", v1Router)
 	srv := &http.Server{
 		Handler: router,
 		Addr:    ":" + port,

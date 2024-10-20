@@ -2,7 +2,8 @@ BINARY_NAME=./dist/built
 
 build:
 	go mod tidy
-	go build -o ${BINARY_NAME} main.go
+	go mod vendor
+	go build -o ${BINARY_NAME}
 	${BINARY_NAME}
 
 refresh:
