@@ -40,11 +40,8 @@ func runWebServer(port string) {
 		MaxAge:           300,
 	}))
 
-	v1Router := chi.NewRouter()
-	fmt.Println("here hereeeee")
-	v1Router.Get("/healthz", handlerHealthCheck)
-	v1Router.Get("/err", handlerError)
-	router.Mount("/v1", v1Router)
+	initRoutes(router)
+
 	srv := &http.Server{
 		Handler: router,
 		Addr:    ":" + port,
@@ -56,4 +53,12 @@ func runWebServer(port string) {
 	if err != nil {
 		log.Fatal("Error: ", err)
 	}
+}
+
+func initRoutes(router *chi.Mux) {
+	v1Router := chi.NewRouter()
+
+	v1Router.Get("/healthz", handlerHealthCheck)
+	v1Router.Get("/err", handlerError)
+	router.Mount("/v1", v1Router)
 }
