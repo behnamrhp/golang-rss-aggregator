@@ -7,24 +7,14 @@ import (
 	"os"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	port := getPort()
 
-	router := chi.NewRouter()
-
-	srv := &http.Server{
-		Handler: router,
-		Addr:    ":" + port,
-	}
-
-	fmt.Printf("Server is runnin on the port: %v", port)
-	err := srv.ListenAndServe()
-	if err != nil {
-		log.Fatal("Error: ", err)
-	}
+	runWebServer(port)
 }
 
 func getPort() string {
@@ -36,4 +26,29 @@ func getPort() string {
 		log.Fatal("Port is not set")
 	}
 	return port
+}
+
+func runWebServer(port string) {
+	router := chi.NewRouter()
+
+	router.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+		MaxAge:           300,
+	}))
+
+	srv := &http.Server{
+		Handler: router,
+		Addr:    ":" + port,
+	}
+
+	fmt.Printf("Server is runnin on the port: %v", port)
+
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Fatal("Error: ", err)
+	}
 }
