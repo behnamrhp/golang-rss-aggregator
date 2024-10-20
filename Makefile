@@ -7,7 +7,8 @@ build:
 
 refresh:
 	go mod tidy
-	go mod venodor
+	go mod vendor
+
 clean:
 	go clean
 	rm ${BINARY_NAME}
