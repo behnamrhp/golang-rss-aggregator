@@ -43,6 +43,7 @@ func runWebServer(port string) {
 	v1Router := chi.NewRouter()
 	fmt.Println("here hereeeee")
 	v1Router.Get("/healthz", handlerHealthCheck)
+	v1Router.Get("/err", handlerError)
 	router.Mount("/v1", v1Router)
 	srv := &http.Server{
 		Handler: router,
