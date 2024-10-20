@@ -1,1 +1,8 @@
-dist
+# Folders
+dist/
+.vscode/
+vendor/
+
+# Files
+.env
+
