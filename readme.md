@@ -4,7 +4,7 @@
 
 ### Migrate postgres
 ```
-goose postgres posgtres://[username]:[password]:@[db address]/[db name] up
+goose postgres posgtres://[username]:[password]@[db address]/[db name] up
 ```
 
 ### Uncomment and config .env file
