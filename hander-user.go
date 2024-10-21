@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/behnamrhp/golang-rss-aggregator.git/internal/auth"
 	"github.com/behnamrhp/golang-rss-aggregator.git/internal/database"
 	"github.com/google/uuid"
 )
 
-func (apiCfg *apiConfig) handlerUser(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *apiConfig) createUser(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		FullName string `json:"full_name"`
 	}
@@ -40,6 +41,24 @@ func (apiCfg *apiConfig) handlerUser(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
+		return
+	}
+
+	respondWithJSON(w, 201, dbToModelDto(user))
+}
+
+func (apiCfg *apiConfig) getUser(w http.ResponseWriter, r *http.Request) {
+	apiKey, err := auth.GetApiKey(r.Header)
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Auth Error: %v", err))
+		return
+	}
+
+	user, err := apiCfg.DB.GetUserByApiKey(r.Context(), apiKey)
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Couldn't find the user: %v", err))
 		return
 	}
 

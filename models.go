@@ -12,6 +12,7 @@ type UserModel struct {
 	Fullname  string    `json:"full_name"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	ApiKey    string    `json:"api_key"`
 }
 
 func dbToModelDto(dbUser database.User) UserModel {
@@ -20,5 +21,6 @@ func dbToModelDto(dbUser database.User) UserModel {
 		Fullname:  dbUser.Fullname,
 		CreatedAt: dbUser.CreatedAt,
 		UpdatedAt: dbUser.UpdatedAt,
+		ApiKey:    dbUser.ApiKey,
 	}
 }
