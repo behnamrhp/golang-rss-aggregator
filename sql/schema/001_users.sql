@@ -1,4 +1,4 @@
--- +goose up
+-- +goose Up
 CREATE TABLE users (
     id UUID PRIMARY KEY,
     fullname VARCHAR(50) NOT NULL,
@@ -7,5 +7,5 @@ CREATE TABLE users (
 );
 
 
--- +goose down
+-- +goose Down
 DROP TABLE users;

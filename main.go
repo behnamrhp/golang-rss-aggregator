@@ -1,34 +1,28 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
+	"github.com/behnamrhp/golang-rss-aggregator.git/internal/database"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
-	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
+type apiConfig struct {
+	DB *database.Queries
+}
+
 func main() {
-	port := getPort()
+	configs := getEnvs()
 
-	runWebServer(port)
+	runWebServer(configs)
 }
 
-func getPort() string {
-	godotenv.Load()
-
-	port := os.Getenv("PORT")
-
-	if port == "" {
-		log.Fatal("Port is not set")
-	}
-	return port
-}
-
-func runWebServer(port string) {
+func runWebServer(envs Envs) {
 	router := chi.NewRouter()
 
 	router.Use(cors.Handler(cors.Options{
@@ -40,25 +34,37 @@ func runWebServer(port string) {
 		MaxAge:           300,
 	}))
 
-	initRoutes(router)
+	connection, err := sql.Open("postgres", envs.dbUrl)
+
+	if err != nil {
+		log.Fatal("Can't connect to the database:", err)
+	}
+
+	apiConfig := apiConfig{
+		DB: database.New(connection),
+	}
+
+	initRoutes(router, &apiConfig)
 
 	srv := &http.Server{
 		Handler: router,
-		Addr:    ":" + port,
+		Addr:    ":" + envs.port,
 	}
 
-	fmt.Printf("Server is runnin on the port: %v", port)
+	fmt.Printf("Server is runnin on the port: %v", envs.port)
 
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
+
 	if err != nil {
 		log.Fatal("Error: ", err)
 	}
 }
 
-func initRoutes(router *chi.Mux) {
+func initRoutes(router *chi.Mux, apiCfg *apiConfig) {
 	v1Router := chi.NewRouter()
 
 	v1Router.Get("/healthz", handlerHealthCheck)
 	v1Router.Get("/err", handlerError)
+	v1Router.Post("/users", apiCfg.handlerUser)
 	router.Mount("/v1", v1Router)
 }
