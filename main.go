@@ -65,6 +65,12 @@ func initRoutes(router *chi.Mux, apiCfg *apiConfig) {
 
 	v1Router.Get("/healthz", handlerHealthCheck)
 	v1Router.Get("/err", handlerError)
-	v1Router.Post("/users", apiCfg.handlerUser)
+	v1Router.Post("/users", apiCfg.createUser)
+	v1Router.Get("/users", apiCfg.middlewareAuth(apiCfg.getUser))
+	v1Router.Post("/feeds", apiCfg.middlewareAuth(apiCfg.createFeed))
+	v1Router.Get("/feeds", apiCfg.getFeeds)
+	v1Router.Post("/feed-follows", apiCfg.middlewareAuth(apiCfg.createFeedFollow))
+	v1Router.Get("/feed-follows", apiCfg.middlewareAuth(apiCfg.getFeedFollows))
+	v1Router.Delete("/feed-follows/{feedFollowId}", apiCfg.middlewareAuth(apiCfg.deleteFeedFollow))
 	router.Mount("/v1", v1Router)
 }
