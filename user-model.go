@@ -15,7 +15,7 @@ type UserModel struct {
 	ApiKey    string    `json:"api_key"`
 }
 
-func dbToModelDto(dbUser database.User) UserModel {
+func userDbToModelDto(dbUser database.User) UserModel {
 	return UserModel{
 		ID:        dbUser.ID,
 		Fullname:  dbUser.Fullname,

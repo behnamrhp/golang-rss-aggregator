@@ -10,9 +10,10 @@ import (
 	"github.com/google/uuid"
 )
 
-func (apiCfg *apiConfig) createUser(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *apiConfig) createFeed(w http.ResponseWriter, r *http.Request, user database.User) {
 	type parameters struct {
-		FullName string `json:"full_name"`
+		Name string `json:"name"`
+		Url  string `json:"url"`
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -21,8 +22,8 @@ func (apiCfg *apiConfig) createUser(w http.ResponseWriter, r *http.Request) {
 
 	err := decoder.Decode(&params)
 
-	if params.FullName == "" {
-		respondWithError(w, 400, "Please provide correct full name as full_name")
+	if params.Name == "" || params.Url == "" {
+		respondWithError(w, 400, "Please provide correct url and name for you feed")
 		return
 	}
 
@@ -31,11 +32,13 @@ func (apiCfg *apiConfig) createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := apiCfg.DB.CreateUser(r.Context(), database.CreateUserParams{
+	feed, err := apiCfg.DB.CreateFeed(r.Context(), database.CreateFeedParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
-		Fullname:  params.FullName,
+		Name:      params.Name,
+		Url:       params.Url,
+		UserID:    user.ID,
 	})
 
 	if err != nil {
@@ -43,9 +46,5 @@ func (apiCfg *apiConfig) createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondWithJSON(w, 201, userDbToModelDto(user))
-}
-
-func (apiCfg *apiConfig) getUser(w http.ResponseWriter, r *http.Request, user database.User) {
-	respondWithJSON(w, 200, userDbToModelDto(user))
+	respondWithJSON(w, 201, feedDbToModelDto(feed))
 }
