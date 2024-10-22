@@ -41,3 +41,13 @@ func (apiCfg *apiConfig) createFeedFollow(w http.ResponseWriter, r *http.Request
 
 	respondWithJSON(w, 201, feedFollowDbToModelDto(feedFollow))
 }
+
+func (apiConfig *apiConfig) getFeedFollows(w http.ResponseWriter, r *http.Request, user database.User) {
+	dbFeedFollows, err := apiConfig.DB.GetFeedFollows(r.Context(), user.ID)
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Couldn't find any feed follows: %v", err))
+		return
+	}
+	respondWithJSON(w, 200, feedFollowsDbToModelDto(dbFeedFollows))
+}

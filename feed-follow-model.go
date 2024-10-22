@@ -24,3 +24,13 @@ func feedFollowDbToModelDto(dbFeedFollow database.FeedFollow) FeedFollowModel {
 		FeedId:    dbFeedFollow.FeedID,
 	}
 }
+
+func feedFollowsDbToModelDto(dbFeedFollows []database.FeedFollow) []FeedFollowModel {
+	feedFollows := []FeedFollowModel{}
+
+	for _, feedFollow := range dbFeedFollows {
+		feedFollows = append(feedFollows, feedFollowDbToModelDto(feedFollow))
+	}
+
+	return feedFollows
+}
