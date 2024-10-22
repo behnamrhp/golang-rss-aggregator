@@ -24,3 +24,12 @@ func feedDbToModelDto(dbFeed database.Feed) FeedModel {
 		Url:       dbFeed.Url,
 	}
 }
+
+func feedsDbToModelDto(dbFeeds []database.Feed) []FeedModel {
+	feeds := []FeedModel{}
+
+	for _, dbFeed := range dbFeeds {
+		feeds = append(feeds, feedDbToModelDto(dbFeed))
+	}
+	return feeds
+}

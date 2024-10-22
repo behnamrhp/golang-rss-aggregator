@@ -42,9 +42,19 @@ func (apiCfg *apiConfig) createFeed(w http.ResponseWriter, r *http.Request, user
 	})
 
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
+		respondWithError(w, 400, fmt.Sprintf("Couldn't create the feed: %v", err))
 		return
 	}
 
 	respondWithJSON(w, 201, feedDbToModelDto(feed))
+}
+
+func (apiCfg *apiConfig) getFeeds(w http.ResponseWriter, r *http.Request) {
+	feeds, err := apiCfg.DB.GetFeeds(r.Context())
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Couldn't find the feeds: %v", err))
+		return
+	}
+	respondWithJSON(w, 200, feedsDbToModelDto(feeds))
 }
