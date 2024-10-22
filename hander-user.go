@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/behnamrhp/golang-rss-aggregator.git/internal/auth"
 	"github.com/behnamrhp/golang-rss-aggregator.git/internal/database"
 	"github.com/google/uuid"
 )
@@ -47,20 +46,6 @@ func (apiCfg *apiConfig) createUser(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, 201, dbToModelDto(user))
 }
 
-func (apiCfg *apiConfig) getUser(w http.ResponseWriter, r *http.Request) {
-	apiKey, err := auth.GetApiKey(r.Header)
-
-	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Auth Error: %v", err))
-		return
-	}
-
-	user, err := apiCfg.DB.GetUserByApiKey(r.Context(), apiKey)
-
-	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldn't find the user: %v", err))
-		return
-	}
-
+func (apiCfg *apiConfig) getUser(w http.ResponseWriter, r *http.Request, user database.User) {
 	respondWithJSON(w, 200, dbToModelDto(user))
 }
