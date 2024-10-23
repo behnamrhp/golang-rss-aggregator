@@ -9,7 +9,7 @@
   - [Start project](#start-project)
 
 ## Overview
-Go RSS Aggregator is a small project designed to allow users to manage their own RSS feeds. Users can create feeds, follow them, and receive the latest posts scraped repeatedly in each minuets, from these sources.
+Go RSS Aggregator is a small training project designed to allow users to manage their own RSS feeds. Users can create feeds, follow them, and receive the latest posts scraped repeatedly in each minuets, from these sources.
 
 The application is powered by REST APIs, which provide the following functionality for managing users and their RSS feeds.
 
@@ -26,20 +26,12 @@ The application is powered by REST APIs, which provide the following functionali
 - Post Management
   - Retrieve all posts from feeds a user follows.
 
-- API Documentation
-  - OpenAPI/Swagger documentation for easy exploration of endpoints.
-
-- Additional Tools
-  - Dockerfile for containerization.
-  - Integration with Backstage for service catalog management.
-
 ## Technologies
 - Language: [Golang](https://go.dev/)
 - Database: [Postgress](https://postgresql.org/)
 - Migration: [Goose](https://github.com/pressly/goose)
 - Sql compiler: [Sqlc](https://github.com/sqlc-dev/sqlc)
 - Router: [Chi](https://github.com/go-chi/chi)
-- Containerization: [Docker](https://www.docker.com/)
 
 ## Getting Started
 
