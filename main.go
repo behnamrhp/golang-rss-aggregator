@@ -81,5 +81,6 @@ func initRoutes(router *chi.Mux, apiCfg *apiConfig) {
 	v1Router.Post("/feed-follows", apiCfg.middlewareAuth(apiCfg.createFeedFollow))
 	v1Router.Get("/feed-follows", apiCfg.middlewareAuth(apiCfg.getFeedFollows))
 	v1Router.Delete("/feed-follows/{feedFollowId}", apiCfg.middlewareAuth(apiCfg.deleteFeedFollow))
+	v1Router.Get("/posts", apiCfg.middlewareAuth(apiCfg.getPostsForUser))
 	router.Mount("/v1", v1Router)
 }
